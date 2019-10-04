@@ -1,13 +1,17 @@
 <?php
 session_start();
 
+$description = "";
+$estado = "";
+$update = false;
+
 $mysqli = new mysqli('localhost', 'root', '', 'test') or die(mysqli_error($mysqli));
 
-if (isset($_POST['submit'])){
+if (isset($_POST['submit'])) {
   $description = $_POST['descripcion'];
   $estado = $_POST['estado'];
 
-  $mysqli->query("INSERT INTO ticket (descripcion, estado) VALUES ('$description', '$estado')") or die($mysqli->error);
+  $mysqli->query("INSERT INTO ticket (descripcion, estado) VALUES ('$description', '$estado')") or die($mysqli->error());
 
   $_SESSION['message'] = "Ticket Guardado";
   $_SESSION['msg_type'] = "success";
@@ -18,12 +22,26 @@ if (isset($_POST['submit'])){
 if (isset($_GET['delete'])) {
   $id = $_GET['delete'];
 
-  $mysqli->query("DELETE FROM ticket WHERE id=$id") or die($mysqli->error);
+  $mysqli->query("DELETE FROM ticket WHERE id=$id") or die($mysqli->error());
 
   $_SESSION['message'] = "Ticket Eliminado";
   $_SESSION['msg_type'] = "danger";
 
   header('location: index.php');
+}
+
+if (isset($_GET['edit'])) {
+  $id = $_GET['edit'];
+  $update = true;
+  $result = $mysqli->query("SELECT * FROM ticket WHERE id=$id") or die($mysqli->error());
+
+  var_dump($result);
+
+  if (isset($result)) {
+    $value = $result->fetch_array();
+    $description = $value['descripcion'];
+    $estado = $value['estado'];
+  }
 }
 
 ?>
@@ -35,18 +53,25 @@ if (isset($_GET['delete'])) {
       <div class="input-group-prepend">
         <span class="input-group-text">Descripcion</span>
       </div>
-      <textarea class="form-control" aria-label="With textarea" name="descripcion"></textarea>
+      <input type="text" class="form-control" aria-label="With textarea" name="descripcion" placeholder="Descripcion..." value="<?php echo $description ?>">
     </div>
 
     <div class="input-group mb-3 px-5">
       <div class="input-group-append">
         <span class="input-group-text" id="basic-addon2">Estado</span>
       </div>
-      <input type="text" class="form-control" placeholder="Estado" aria-label="Recipient's username" aria-describedby="basic-addon2" name="estado">
+      <input type="text" class="form-control" placeholder="Estado" aria-label="Recipient's username" aria-describedby="basic-addon2" name="estado" value="<?php echo $estado ?>">
     </div>
+    <?php
+    if ($update == true) : ?>
+      <div class="input-group mb-3">
+        <input type="submit" class="m-auto btn btn-info" value="Editar" name="submit">
+      </div>
+    <?php else : ?>
 
-    <div class="input-group mb-3">
-      <input type="submit" class="m-auto btn btn-primary" value="registrar" name="submit">
-    </div>
+      <div class="input-group mb-3">
+        <input type="submit" class="m-auto btn btn-primary" value="registrar" name="submit">
+      </div>
+    <?php endif; ?>
   </form>
 </section>
