@@ -35,8 +35,6 @@ if (isset($_GET['edit'])) {
   $update = true;
   $result = $mysqli->query("SELECT * FROM ticket WHERE id=$id") or die($mysqli->error());
 
-  var_dump($result);
-
   if (isset($result)) {
     $value = $result->fetch_array();
     $description = $value['descripcion'];
