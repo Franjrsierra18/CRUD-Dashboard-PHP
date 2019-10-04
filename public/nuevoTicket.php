@@ -4,6 +4,7 @@ session_start();
 $description = "";
 $estado = "";
 $update = false;
+$id = 0;
 
 $mysqli = new mysqli('localhost', 'root', '', 'test') or die(mysqli_error($mysqli));
 
@@ -44,9 +45,22 @@ if (isset($_GET['edit'])) {
   }
 }
 
+if (isset($_POST['update'])) {
+  $id = $_POST['id'];
+  $description = $_POST['descripcion'];
+  $estado = $_POST['estado'];
+
+  $mysqli->query("UPDATE ticket SET descripcion='$description', estado='$estado' WHERE id=$id") or die($mysqli->error());
+
+  $_SESSION['message'] = "Ticket Editado";
+  $_SESSION['msg_type'] = "warning";
+  header('location: index.php');
+}
+
 ?>
 <section class="m-3 p-5 bg-light">
   <form action="index.php" method="post">
+    <input type="hidden" name="id" value="<?php echo $id ?>">
     <h1 class="text-center pb-5">Agrega Ticket</h1>
 
     <div class="input-group mb-3 px-5">
@@ -65,10 +79,9 @@ if (isset($_GET['edit'])) {
     <?php
     if ($update == true) : ?>
       <div class="input-group mb-3">
-        <input type="submit" class="m-auto btn btn-info" value="Editar" name="submit">
+        <input type="submit" class="m-auto btn btn-info" value="Editar" name="update">
       </div>
     <?php else : ?>
-
       <div class="input-group mb-3">
         <input type="submit" class="m-auto btn btn-primary" value="registrar" name="submit">
       </div>
