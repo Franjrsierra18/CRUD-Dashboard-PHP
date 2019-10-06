@@ -44,10 +44,11 @@ if (isset($_SESSION['user_id'])) {
 	<?php
 	if (!empty($user)): ?>
 
-	<div class="alert alert-success?">
+	<div class="alert alert-success">
 		Welcome <?= $user['email'] ?>
 		<br>
-		<small>You are successfully log in</small>
+		<small>You are successfully log in.</small>
+		<br>
 		<a href="Registro/logout.php">Logout</a>
 	</div>
 	<?php endif ?>

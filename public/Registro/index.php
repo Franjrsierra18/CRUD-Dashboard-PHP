@@ -15,11 +15,22 @@
     <?php include 'partials/menu.php'; ?>
   </header>
 
-  <h1>Please Login or Signup</h1>
+  <div class="wrapper fadeInDown">
+    <div id="formContent">
+      <!-- Tabs Titles -->
+      <h1>Welcome!</h1>
+      <br>
+      <a href="login.php" class="btn btn-primary btn-rounded fadeIn fourth">Login</a>
+      <br>
+      <br>
+      <p>or</p>
+      <a href="signup.php" class="btn btn-primary btn-rounded fadeIn fourth">Signup</a>
+      <br>
+      <br>
+      <br>
 
-  <a href="login.php">Login</a>
-  or
-  <a href="signup.php">Signup</a>
+    </div>
+  </div>
 
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
