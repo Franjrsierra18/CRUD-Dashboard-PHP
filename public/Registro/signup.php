@@ -1,5 +1,21 @@
 <?php
 require 'database.php';
+
+$message = '';
+
+if (!empty($_POST['email']) && !empty($_POST['password'])) {
+  $sql = "INSERT INTO users (email, password) VALUES (:email, :password)";
+  $stm = $conn->prepare($sql);
+  $stm->bindParam(':email', $_POST['email']);
+  $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+  $stm->bindParam(':password', $password);
+
+  if ($stm->execute()) {
+    $message = 'Succesfully created new user';
+  } else {
+    $message = 'Error creating user';
+  }
+}
 ?>
 
 <!DOCTYPE html>
@@ -18,11 +34,17 @@ require 'database.php';
   <header>
     <?php include 'partials/menu.php'; ?>
   </header>
+  <?php
+  if (!empty($message)) : ?>
 
+    <p><?= $message ?></p>
+
+  <?php endif; ?>
   <!-- Default form register -->
   <form class="text-center border border-light p-5" action="signup.php" method="post">
 
     <p class="h4 mb-4">Sign up</p>
+    <small>or <a href="login.php">Login</a></small>
 
     <!-- E-mail -->
     <input type="email" id="defaultRegisterFormEmail" class="form-control mb-4" placeholder="E-mail" name="email">
@@ -32,19 +54,11 @@ require 'database.php';
     <small id="defaultRegisterFormPasswordHelpBlock" class="form-text text-muted mb-4">
       At least 8 characters and 1 digit
     </small>
-    
+
     <input type="password" id="defaultRegisterFormPassword" class="form-control" placeholder="Confirm your Password" aria-describedby="defaultRegisterFormPasswordHelpBlock" name="confirm-password">
 
     <!-- Sign up button -->
     <button class="btn btn-info my-4 btn-block" type="submit" value="Send">Sign in</button>
-
-    <!-- Social register -->
-    <p>or sign up with:</p>
-
-    <a href="#" class="mx-2" role="button"><i class="fab fa-facebook-f light-blue-text"></i></a>
-    <a href="#" class="mx-2" role="button"><i class="fab fa-twitter light-blue-text"></i></a>
-    <a href="#" class="mx-2" role="button"><i class="fab fa-linkedin-in light-blue-text"></i></a>
-    <a href="#" class="mx-2" role="button"><i class="fab fa-github light-blue-text"></i></a>
 
     <hr>
 

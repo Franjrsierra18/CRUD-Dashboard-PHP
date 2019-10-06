@@ -1,3 +1,27 @@
+<?php
+
+session_start();
+
+require 'database.php';
+
+if (!empty($_POST['email']) && !empty($_POST['password'])) {
+  $records = $conn->prepare('SELECT id, email, password FROM users WHERE email=:email');
+  $records->bindParam(':email', $_POST['email']);
+  $records->execute();
+  $results = $records->fetch(PDO::FETCH_ASSOC);
+
+  $message = '';
+
+  if (count($results) > 0 && password_verify($_POST['password'], $results['password'])) {
+    $_SESSION['user_id'] = $results['id'];
+    header('location: /phpMVC/public/index.php');
+  } else {
+    $message = "Sorry, your email or password do not match";
+  }
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,6 +38,13 @@
   <header>
     <?php include 'partials/menu.php'; ?>
   </header>
+
+  <?php if (!empty($message)) : ?>
+
+    <p><?= $message ?></p>
+
+  <?php endif; ?>
+
   <!-- Default form login -->
   <form class="text-center border border-light p-5" action="login.php" method="post">
 
@@ -44,7 +75,7 @@
 
     <!-- Register -->
     <p>Not a member?
-      <a href="">Register</a>
+      <a href="signup.php">Signup</a>
     </p>
 
     <!-- Social login -->

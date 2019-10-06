@@ -1,12 +1,25 @@
 <?php
 session_start();
 require_once dirname(__DIR__) . '/vendor/autoload.php';
-
+require 'Registro/database.php';
 use App\Db;
 
 $dbase = new Db();
 
 $resultado = $dbase->listarTickets();
+
+if (isset($_SESSION['user_id'])) {
+	$records = $conn->prepare('SELECT id, email, password FROM users WHERE id= :id');
+	$records->bindParam(':id', $_SESSION['user_id']);
+	$records->execute();
+	$results = $records->fetch(PDO::FETCH_ASSOC);
+
+	$user = '';
+
+	if (count($results) > 0) {
+		$user = $results;
+	}
+}
 
 ?>
 
@@ -27,6 +40,18 @@ $resultado = $dbase->listarTickets();
 		<?php include 'menu.php'; ?>
 	</header>
 	<section class="px-5 mt-5">
+
+	<?php
+	if (!empty($user)): ?>
+
+	<div class="alert alert-success?">
+		Welcome <?= $user['email'] ?>
+		<br>
+		<small>You are successfully log in</small>
+		<a href="Registro/logout.php">Logout</a>
+	</div>
+	<?php endif ?>
+
 	<?php
 	if (isset($_SESSION['message'])): ?>
 
